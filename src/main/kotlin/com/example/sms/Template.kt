@@ -26,4 +26,5 @@ enum class Language {
 
 interface TemplateRepository : MongoRepository<Template, String> {
     fun findByEventAndLanguage(event: Event, language: Language): Template?
+    fun findAllByEvent(event: Event): List<Template>
 }
