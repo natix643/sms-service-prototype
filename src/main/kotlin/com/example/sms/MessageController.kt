@@ -23,11 +23,11 @@ class MessageController(
         @RequestParam phoneNumber: String,
         @RequestParam language: Language,
         @RequestParam event: Event,
-        @RequestBody bindings: Map<String, String>
+        @RequestBody variables: Map<String, String>
     ): ResponseEntity<Unit> {
         val template = templateRepository.findByEventAndLanguage(event, language)
         return if (template != null) {
-            sender.send(phoneNumber, template, bindings)
+            sender.send(phoneNumber, template, variables)
             ResponseEntity.accepted().build()
         } else {
             ResponseEntity.notFound().build()
