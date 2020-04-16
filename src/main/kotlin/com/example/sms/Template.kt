@@ -13,9 +13,7 @@ data class Template(
     // TODO val businessId: String
 )
 
-enum class Event(
-    vararg val variableNames: String
-) {
+enum class Event(vararg val variableNames: String) {
     DELIVERY_PICKUP,
     DELIVERY_IM_HERE("proofCode");
 }
