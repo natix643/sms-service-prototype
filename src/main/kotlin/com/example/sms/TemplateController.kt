@@ -16,7 +16,7 @@ class TemplateController(
     fun getAllForEvent(@RequestParam event: Event): GetTemplatesResponse {
         val templates = repository.findAllByEvent(event)
         return GetTemplatesResponse(
-            variableNames = event.variableNames.toList(),
+            variableNames = event.variableNames.map { it.toString() },
             templatesByLanguage = templates.map { it.language to it }.toMap()
         )
     }

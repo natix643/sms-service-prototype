@@ -1,5 +1,7 @@
 package com.example.sms
 
+import com.example.sms.Event.DELIVERY_IM_HERE
+import com.example.sms.Variable.PROOF_CODE
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,7 +25,23 @@ class MessageController(
         @RequestParam phoneNumber: String,
         @RequestParam language: Language,
         @RequestParam event: Event,
-        @RequestBody variables: Map<String, String>
+        @RequestBody variables: Map<Variable, String>
+    ) = send(phoneNumber, language, event, variables)
+
+    @PostMapping("/deliveryImHere")
+    fun sendDeliveryImHere(
+        @RequestParam phoneNumber: String,
+        @RequestParam language: Language,
+        @RequestParam proofCode: String
+    ) = send(phoneNumber, language, DELIVERY_IM_HERE, mapOf(
+        PROOF_CODE to proofCode
+    ))
+
+    private fun send(
+        phoneNumber: String,
+        language: Language,
+        event: Event,
+        variables: Map<Variable, String>
     ): ResponseEntity<Unit> {
         val template = templateRepository.findByEventAndLanguage(event, language)
         return if (template != null) {

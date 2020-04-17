@@ -1,5 +1,6 @@
 package com.example.sms
 
+import com.example.sms.Variable.PROOF_CODE
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
@@ -13,9 +14,13 @@ data class Template(
     // TODO val businessId: String
 )
 
-enum class Event(vararg val variableNames: String) {
+enum class Event(vararg val variableNames: Variable) {
     DELIVERY_PICKUP,
-    DELIVERY_IM_HERE("proofCode");
+    DELIVERY_IM_HERE(PROOF_CODE);
+}
+
+enum class Variable {
+    PROOF_CODE
 }
 
 enum class Language {

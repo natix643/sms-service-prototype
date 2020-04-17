@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service
 
 interface Sender {
     val gateway: Gateway
-    fun send(phoneNumber: String, template: Template, variables: Map<String, String>)
+    fun send(phoneNumber: String, template: Template, variables: Map<Variable, String>)
 
-    fun render(templateText: String, variables: Map<String, String>): String {
+    fun render(templateText: String, variables: Map<Variable, String>): String {
         var result = templateText
-        variables.forEach { (name, value) ->
-            result = result.replace("\${$name}", value)
+        variables.forEach { (variable, value) ->
+            result = result.replace("\${$variable}", value)
         }
         return result
     }
@@ -24,7 +24,7 @@ class TwillioSender(
     private val logger = LoggerFactory.getLogger(TwillioSender::class.java)
     override val gateway = TWILLIO
 
-    override fun send(phoneNumber: String, template: Template, variables: Map<String, String>) {
+    override fun send(phoneNumber: String, template: Template, variables: Map<Variable, String>) {
         val message = Message(
             event = template.event,
             language = template.language,

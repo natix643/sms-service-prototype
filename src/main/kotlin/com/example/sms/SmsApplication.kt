@@ -1,8 +1,9 @@
 package com.example.sms
 
+import com.example.sms.Event.DELIVERY_IM_HERE
 import com.example.sms.Language.CS
 import com.example.sms.Language.EN
-import com.example.sms.Event.DELIVERY_IM_HERE
+import com.example.sms.Variable.PROOF_CODE
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -20,12 +21,12 @@ class SmsApplication {
             Template(
                 event = DELIVERY_IM_HERE,
                 language = EN,
-                text = "driver is here, your code is \${proofCode}"
+                text = "driver is here, your code is \${$PROOF_CODE}"
             ),
             Template(
                 event = DELIVERY_IM_HERE,
                 language = CS,
-                text = "řidič je tady, váš kód je \${proofCode}"
+                text = "řidič je tady, váš kód je \${$PROOF_CODE}"
             )
         ))
     }
