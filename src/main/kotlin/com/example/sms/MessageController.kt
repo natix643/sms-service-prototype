@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/api/messages")
+@RequestMapping("/api/sms/messages")
 @RestController
 class MessageController(
     private val templateRepository: TemplateRepository,
@@ -24,28 +24,36 @@ class MessageController(
     fun sendMessage(
         @RequestParam phoneNumber: String,
         @RequestParam language: Language,
+        @RequestParam businessId: String?,
         @RequestParam event: Event,
         @RequestBody variables: Map<Variable, String>
-    ) = send(phoneNumber, language, event, variables)
+    ) = send(phoneNumber, language, businessId, event, variables)
 
     @PostMapping("/deliveryImHere")
     fun sendDeliveryImHere(
         @RequestParam phoneNumber: String,
         @RequestParam language: Language,
+        @RequestParam businessId: String?,
         @RequestParam proofCode: String
-    ) = send(phoneNumber, language, DELIVERY_IM_HERE, mapOf(
+    ) = send(phoneNumber, language, businessId, DELIVERY_IM_HERE, mapOf(
         PROOF_CODE to proofCode
     ))
 
     private fun send(
         phoneNumber: String,
         language: Language,
+        businessId: String?,
         event: Event,
         variables: Map<Variable, String>
     ): ResponseEntity<Unit> {
-        val template = templateRepository.findByEventAndLanguage(event, language)
+        val template = if (businessId != null) {
+            templateRepository.findByEventAndBusinessId(event, businessId)
+                ?: templateRepository.findByEventAndBusinessId(event, null)
+        } else {
+            templateRepository.findByEventAndBusinessId(event, null)
+        }
         return if (template != null) {
-            sender.send(phoneNumber, template, variables)
+            sender.send(phoneNumber, language, template, variables)
             ResponseEntity.accepted().build()
         } else {
             ResponseEntity.notFound().build()

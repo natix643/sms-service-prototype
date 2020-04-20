@@ -9,14 +9,16 @@ import org.springframework.data.mongodb.repository.MongoRepository
 data class Template(
     @Id val id: String? = null,
     val event: Event,
-    val language: Language,
-    val text: String
-    // TODO val businessId: String
+    val businessId: String?,
+    val send: Boolean,
+    val translations: Map<Language, String>
 )
 
-enum class Event(vararg val variableNames: Variable) {
+enum class Event(vararg variables: Variable) {
     DELIVERY_PICKUP,
     DELIVERY_IM_HERE(PROOF_CODE);
+
+    val variables = variables.toList()
 }
 
 enum class Variable {
@@ -28,6 +30,6 @@ enum class Language {
 }
 
 interface TemplateRepository : MongoRepository<Template, String> {
-    fun findByEventAndLanguage(event: Event, language: Language): Template?
+    fun findByEventAndBusinessId(event: Event, businessId: String?): Template?
     fun findAllByEvent(event: Event): List<Template>
 }

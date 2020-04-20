@@ -20,13 +20,18 @@ class SmsApplication {
         templateRepository.saveAll(listOf(
             Template(
                 event = DELIVERY_IM_HERE,
-                language = EN,
-                text = "driver is here, your code is \${$PROOF_CODE}"
+                businessId = null,
+                send = true,
+                translations = mapOf(
+                    EN to "driver is here, your code is \${$PROOF_CODE}",
+                    CS to "řidič je tady, váš kód je \${$PROOF_CODE}"
+                )
             ),
             Template(
                 event = DELIVERY_IM_HERE,
-                language = CS,
-                text = "řidič je tady, váš kód je \${$PROOF_CODE}"
+                businessId = "1",
+                send = false,
+                translations = mapOf()
             )
         ))
     }
