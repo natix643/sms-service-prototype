@@ -9,25 +9,25 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/sms/events")
-class EventController {
+@RequestMapping("/api/sms/types")
+class SmsTypeController {
 
     @GetMapping
-    fun getAll(): List<EventInfo> =
-        Event.values().map { it.toInfo() }
+    fun getAll(): List<SmsTypeInfo> =
+        SmsType.values().map { it.toInfo() }
 
-    @GetMapping("/{name}")
-    fun getByName(@PathVariable name: String): ResponseEntity<EventInfo> {
-        val event = Event.values().find { it.name == name }
-        return if (event != null) ok(event.toInfo())
+    @GetMapping("/{id}")
+    fun getByName(@PathVariable id: String): ResponseEntity<SmsTypeInfo> {
+        val type = SmsType.values().find { it.name == id }
+        return if (type != null) ok(type.toInfo())
         else notFound().build()
     }
 }
 
-data class EventInfo(
-    val name: Event,
+data class SmsTypeInfo(
+    val id: SmsType,
     val customizable: Boolean,
     val variables: List<Variable>
 )
 
-fun Event.toInfo() = EventInfo(this, customizable, variables)
+fun SmsType.toInfo() = SmsTypeInfo(this, customizable, variables.toList())

@@ -9,7 +9,7 @@ import java.time.Instant
 data class Message(
     @Id val id: String? = null,
     val sentAt: Instant = Instant.now(),
-    val event: Event,
+    val type: SmsType,
     val language: Language,
     val text: String,
     val gateway: Gateway,

@@ -42,13 +42,13 @@ class TwillioSender(
 
         val translation = template.translations.getValue(language)
         val message = Message(
-            event = template.event,
+            type = template.type,
             language = language,
             text = render(translation, variables),
             gateway = gateway,
             phoneNumber = phoneNumber
         )
         val savedMessage = messageRepository.save(message)
-        logger.info("sending message id=${savedMessage.id} event=${template.event} phoneNumber=$phoneNumber thru=$gateway")
+        logger.info("sending message id=${savedMessage.id} type=${template.type} phoneNumber=$phoneNumber thru=$gateway")
     }
 }

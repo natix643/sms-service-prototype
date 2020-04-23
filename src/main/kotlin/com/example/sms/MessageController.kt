@@ -1,6 +1,6 @@
 package com.example.sms
 
-import com.example.sms.Event.DELIVERY_IM_HERE
+import com.example.sms.SmsType.DELIVERY_IM_HERE
 import com.example.sms.Variable.PROOF_CODE
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -25,9 +25,9 @@ class MessageController(
         @RequestParam phoneNumber: String,
         @RequestParam language: Language,
         @RequestParam businessId: String?,
-        @RequestParam event: Event,
+        @RequestParam type: SmsType,
         @RequestBody variables: Map<Variable, String>
-    ) = send(phoneNumber, language, businessId, event, variables)
+    ) = send(phoneNumber, language, businessId, type, variables)
 
     @PostMapping("/deliveryImHere")
     fun sendDeliveryImHere(
@@ -43,14 +43,14 @@ class MessageController(
         phoneNumber: String,
         language: Language,
         businessId: String?,
-        event: Event,
+        type: SmsType,
         variables: Map<Variable, String>
     ): ResponseEntity<Unit> {
         val template = if (businessId != null) {
-            templateRepository.findByEventAndBusinessId(event, businessId)
-                ?: templateRepository.findByEventAndBusinessId(event, null)
+            templateRepository.findByTypeAndBusinessId(type, businessId)
+                ?: templateRepository.findByTypeAndBusinessId(type, null)
         } else {
-            templateRepository.findByEventAndBusinessId(event, null)
+            templateRepository.findByTypeAndBusinessId(type, null)
         }
         return if (template != null) {
             sender.send(phoneNumber, language, template, variables)

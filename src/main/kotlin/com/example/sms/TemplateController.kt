@@ -14,38 +14,38 @@ class TemplateController(
     private val repository: TemplateRepository
 ) {
 
-    @GetMapping("/{event}")
-    fun getAllByEvent(@PathVariable event: Event): List<Template> {
-        return repository.findAllByEvent(event)
+    @GetMapping("/{type}")
+    fun getAllByType(@PathVariable type: SmsType): List<Template> {
+        return repository.findAllByType(type)
     }
 
-    @GetMapping("/{event}/default")
-    fun getByEventDefault(
-        @PathVariable event: Event
+    @GetMapping("/{type}/default")
+    fun getByTypeDefault(
+        @PathVariable type: SmsType
     ): ResponseEntity<Template> {
-        val template = repository.findByEventAndBusinessId(event, null)
+        val template = repository.findByTypeAndBusinessId(type, null)
         return if (template != null) ResponseEntity.ok(template)
         else ResponseEntity.notFound().build()
     }
 
-    @GetMapping("/{event}/business/{businessId}")
-    fun getByEventAndBusiness(
-        @PathVariable event: Event,
+    @GetMapping("/{type}/business/{businessId}")
+    fun getByTypeAndBusiness(
+        @PathVariable type: SmsType,
         @PathVariable businessId: String
     ): ResponseEntity<Template> {
-        val template = repository.findByEventAndBusinessId(event, businessId)
+        val template = repository.findByTypeAndBusinessId(type, businessId)
         return if (template != null) ResponseEntity.ok(template)
         else ResponseEntity.notFound().build()
     }
 
     @PostMapping
     fun save(@RequestBody r: SaveTemplateRequest) {
-        val old = repository.findByEventAndBusinessId(r.event, r.businessId)
+        val old = repository.findByTypeAndBusinessId(r.type, r.businessId)
         val new = old?.copy(
             send = r.send,
             translations = r.translations
         ) ?: Template(
-            event = r.event,
+            type = r.type,
             businessId = r.businessId,
             send = r.send,
             translations = r.translations
@@ -55,7 +55,7 @@ class TemplateController(
 }
 
 data class SaveTemplateRequest(
-    val event: Event,
+    val type: SmsType,
     val businessId: String?,
     val send: Boolean,
     val translations: Map<Language, String>

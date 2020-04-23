@@ -1,6 +1,6 @@
 package com.example.sms
 
-import com.example.sms.Event.DELIVERY_IM_HERE
+import com.example.sms.SmsType.DELIVERY_IM_HERE
 import com.example.sms.Language.CS
 import com.example.sms.Language.EN
 import com.example.sms.Variable.PROOF_CODE
@@ -19,7 +19,7 @@ class SmsApplication {
     fun initDb(templateRepository: TemplateRepository) = ApplicationRunner {
         templateRepository.saveAll(listOf(
             Template(
-                event = DELIVERY_IM_HERE,
+                type = DELIVERY_IM_HERE,
                 businessId = null,
                 send = true,
                 translations = mapOf(
@@ -28,7 +28,7 @@ class SmsApplication {
                 )
             ),
             Template(
-                event = DELIVERY_IM_HERE,
+                type = DELIVERY_IM_HERE,
                 businessId = "1",
                 send = false,
                 translations = mapOf()
