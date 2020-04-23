@@ -14,19 +14,20 @@ class EventController {
 
     @GetMapping
     fun getAll(): List<EventInfo> =
-        Event.values().map { EventInfo(it) }
+        Event.values().map { it.toInfo() }
 
     @GetMapping("/{name}")
     fun getByName(@PathVariable name: String): ResponseEntity<EventInfo> {
         val event = Event.values().find { it.name == name }
-        return if (event != null) ok(EventInfo(event))
+        return if (event != null) ok(event.toInfo())
         else notFound().build()
     }
 }
 
 data class EventInfo(
     val name: Event,
+    val customizable: Boolean,
     val variables: List<Variable>
-) {
-    constructor(event: Event) : this(event, event.variables)
-}
+)
+
+fun Event.toInfo() = EventInfo(this, customizable, variables)

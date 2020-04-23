@@ -1,6 +1,7 @@
 package com.example.sms
 
 import com.example.sms.Variable.PROOF_CODE
+import com.example.sms.Variable.REGISTRATION_CODE
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.repository.MongoRepository
@@ -14,14 +15,19 @@ data class Template(
     val translations: Map<Language, String>
 )
 
-enum class Event(vararg variables: Variable) {
-    DELIVERY_PICKUP,
-    DELIVERY_IM_HERE(PROOF_CODE);
+enum class Event(
+    val customizable: Boolean,
+    vararg variables: Variable
+) {
+    REGISTRATION(false, REGISTRATION_CODE),
+    DELIVERY_PICKUP(true),
+    DELIVERY_IM_HERE(true, PROOF_CODE);
 
     val variables = variables.toList()
 }
 
 enum class Variable {
+    REGISTRATION_CODE,
     PROOF_CODE
 }
 
@@ -31,5 +37,6 @@ enum class Language {
 
 interface TemplateRepository : MongoRepository<Template, String> {
     fun findByEventAndBusinessId(event: Event, businessId: String?): Template?
+    fun findAllByBusinessId(businessId: String?): List<Template>
     fun findAllByEvent(event: Event): List<Template>
 }
